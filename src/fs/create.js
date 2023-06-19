@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync } from 'fs';
+import { writeFile, existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -9,10 +9,18 @@ const __dirname = dirname(__filename);
 const create = async () => {
     const fileName = path.join(__dirname, 'files/fresh.txt');
     if (existsSync(fileName)) {
-        throw new Error('FS operation failed');
+        errorHandler();
     } else {
-        writeFileSync(fileName, 'I am fresh and young');
+        writeFile(fileName, 'I am fresh and young', (error) => {
+            if (error) {
+                errorHandler();
+            }
+        });
     }
 };
 
 await create();
+
+const errorHandler = () => {
+    throw new Error('FS operation failed');
+}
